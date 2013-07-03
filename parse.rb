@@ -1,5 +1,3 @@
-require 'debugger'
-
 export_sql = File.open('export.pgsql', 'w')
 
 index = 0
