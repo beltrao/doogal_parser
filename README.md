@@ -1,4 +1,4 @@
 doogal_parser
 =============
 
-parser for Doogal postcodes
+Parser for Doogal postcodes from http://www.doogal.co.uk/UKPostcodesCsvFrame.php
