@@ -1,31 +1,26 @@
 require 'debugger'
-require 'csv'
-
-POSTCODES_FILE = 'doogal_postcodes_jun_2013/postcodes.csv'
-
-puts "Working on file #{POSTCODES_FILE}"
 
 export_sql = File.open('export.pgsql', 'w')
 
-puts 'Opening CSV file'
+index = 0
 
-csv_table = CSV.read(POSTCODES_FILE, quote_char: '"', col_sep: ',', row_sep: :auto, headers: true)
+File.open('doogal_postcodes_jun_2013/postcodes.csv').each do |line|
+  if index == 0
+    index += 1
+    next
+  end
 
-puts 'Opened CSV file'
-
-i = 0
-csv_table.each do |row|
-  # format is Postcode,Latitude,Longitude
-  code = row[0].gsub(' ', '')
-  lat = row[1]
-  lon = row[2]
+  # AB1 0 AA, 57.101478, -2.242852, ...
+  columns = line.split(',')
+  code = columns[0].gsub(' ', '')
+  lat = columns[1]
+  lon = columns[2]
 
   export_sql.write "INSERT INTO doogal_postcodes_jun_2013(code, lat,lon) VALUES ('#{code}', #{lat}, #{lon});"
-  i += 1
-  puts i if i % 1000 == 0
-end
 
-puts "Successfully parsed file #{POSTCODES_FILE}"
+  index += 1
+  puts index if index % 1000 == 0
+end
 
 export_sql.close
 
